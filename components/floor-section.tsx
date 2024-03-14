@@ -4,6 +4,10 @@ import { useState } from "react";
 
 import { Button } from "./ui/button";
 import { NewEncounterForm } from "./new-encounter-form";
+import { EncounterSection } from "./encounter-section";
+
+// TODO: add duplicate check on attributes
+// TODO: delete encounter
 
 interface FloorSectionProps {
   floorNum: number;
@@ -13,24 +17,28 @@ interface FloorSectionProps {
 
 export const FloorSection = ({ floorNum }: FloorSectionProps) => {
   const [isAddingNewEncounter, setIsAddingNewEncounter] = useState(false);
-  const [selectedElements, setSelectedElements] = useState<string[]>([]);
+  const [selectedAttributes, setSelectedAttributes] = useState<string[]>([]);
 
-  // handlers for saving, and altering elements of encounter in NewEncounterForm
+  // list of encounter's attributes
+  const [encounters, setEncounters] = useState<string[][]>([]);
+
+  // handlers for saving, and altering attributes of encounter in NewEncounterForm
   const handleSaveEncounter = () => {
     setIsAddingNewEncounter(false);
-    // TODO: create new encounter with types of selected elements
-    setSelectedElements([]);
+    selectedAttributes.length &&
+      setEncounters([...encounters, selectedAttributes]);
+    setSelectedAttributes([]);
   };
 
   const handleSelectElement = (element: string) => {
-    setSelectedElements([...selectedElements, element]);
+    setSelectedAttributes([...selectedAttributes, element]);
   };
 
   const handleRemoveElement = (element: string) => {
-    const arrayWithRemovedElement = selectedElements.filter(
+    const arrayWithRemovedElement = selectedAttributes.filter(
       (selectedElement) => selectedElement !== element,
     );
-    setSelectedElements([...arrayWithRemovedElement]);
+    setSelectedAttributes([...arrayWithRemovedElement]);
   };
 
   return (
@@ -46,12 +54,15 @@ export const FloorSection = ({ floorNum }: FloorSectionProps) => {
       </div>
       {isAddingNewEncounter && (
         <NewEncounterForm
-          selectedElements={selectedElements}
+          selectedAttributes={selectedAttributes}
           handleSaveEncounter={handleSaveEncounter}
           handleSelectElement={handleSelectElement}
           handleRemoveElement={handleRemoveElement}
         />
       )}
+      {encounters.map((encounterAttributes) => (
+        <EncounterSection attributes={encounterAttributes} />
+      ))}
     </div>
   );
 };

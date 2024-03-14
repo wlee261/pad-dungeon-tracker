@@ -3,17 +3,17 @@
 import { Button } from "./ui/button";
 
 // constants file at some point
-const elements = ["Fire", "Water", "Grass", "Light", "Dark"];
+const attributes = ["Fire", "Water", "Grass", "Light", "Dark"];
 
 interface NewEncounterFormProps {
-  selectedElements: string[];
+  selectedAttributes: string[];
   handleSaveEncounter: () => void;
   handleSelectElement: (element: string) => void;
   handleRemoveElement: (element: string) => void;
 }
 
 export const NewEncounterForm = ({
-  selectedElements,
+  selectedAttributes,
   handleSaveEncounter,
   handleSelectElement,
   handleRemoveElement,
@@ -22,11 +22,12 @@ export const NewEncounterForm = ({
     <div className="flex flex-col items-center">
       <h2>Choose Element of Encounter (left to right)</h2>
       <div>
-        {elements.map((element) => (
+        {attributes.map((element) => (
           <Button
+            key={element}
             className="m-1"
             onClick={(e) => {
-              if (selectedElements.length < 2) {
+              if (selectedAttributes.length < 2) {
                 const elementButton = e.target as HTMLButtonElement;
                 handleSelectElement(elementButton.innerText);
               }
@@ -37,9 +38,10 @@ export const NewEncounterForm = ({
         ))}
       </div>
       <div className="h-14">
-        {selectedElements.map((selectedElement) => {
+        {selectedAttributes.map((selectedElement) => {
           return (
             <Button
+              key={selectedElement}
               className="m-1"
               onClick={(e) => {
                 const elementButton = e.target as HTMLButtonElement;
@@ -51,7 +53,9 @@ export const NewEncounterForm = ({
           );
         })}
       </div>
-      <Button onClick={handleSaveEncounter}>Save</Button>
+      <Button onClick={handleSaveEncounter}>
+        {selectedAttributes.length ? "Save" : "Cancel"}
+      </Button>
     </div>
   );
 };
